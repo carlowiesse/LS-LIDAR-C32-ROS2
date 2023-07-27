@@ -32,11 +32,11 @@ lidarDriver::lidarDriver(const rclcpp::NodeOptions& options) :
 	config_.return_mode = 1;
 	config_.rpm = 300.0;
 
-	this->declare_parameter("frame_id");
-	this->declare_parameter("model");
-	this->declare_parameter("degree_mode");
-	this->declare_parameter("return_mode");
-	this->declare_parameter("rpm");
+	this->declare_parameter("frame_id", rclcpp::PARAMETER_STRING);
+	this->declare_parameter("model", rclcpp::PARAMETER_STRING);
+	this->declare_parameter("degree_mode", rclcpp::PARAMETER_INTEGER);
+	this->declare_parameter("return_mode", rclcpp::PARAMETER_INTEGER);
+	this->declare_parameter("rpm", rclcpp::PARAMETER_DOUBLE);
 	this->get_parameter("frame_id", config_.frame_id);
 	this->get_parameter("model", config_.model);
 	this->get_parameter("degree_mode", config_.degree_mode);
@@ -53,7 +53,7 @@ lidarDriver::lidarDriver(const rclcpp::NodeOptions& options) :
     }
 
     config_.npackets = (int)ceil(packet_rate / frequency);
-	this->declare_parameter("npackets");
+	this->declare_parameter("npackets", rclcpp::PARAMETER_INTEGER);
 	this->get_parameter("npackets", config_.npackets);
 	RCLCPP_INFO(this->get_logger(), "[driver] publishing %d packets per scan", config_.npackets);
     printf("frequency = %f\n", frequency);
@@ -62,8 +62,8 @@ lidarDriver::lidarDriver(const rclcpp::NodeOptions& options) :
 
     int msop_udp_port = (int)MSOP_DATA_PORT_NUMBER;
 	int difop_udp_port = (int)DIFOP_DATA_PORT_NUMBER;
-	this->declare_parameter("msop_port");
-	this->declare_parameter("difop_port");
+	this->declare_parameter("msop_port", rclcpp::PARAMETER_INTEGER);
+	this->declare_parameter("difop_port", rclcpp::PARAMETER_INTEGER);
 	this->get_parameter("msop_port", msop_udp_port);
 	this->get_parameter("difop_port", difop_udp_port);
   
@@ -88,9 +88,9 @@ lidarDriver::lidarDriver(const rclcpp::NodeOptions& options) :
 	std::string output_packets_topic = std::string("lidar_packet");
 	std::string output_difop_topic = std::string("lidar_packet_difop");
 	time_synchronization_ = false;
-	this->declare_parameter("output_packets_topic");
-	this->declare_parameter("output_difop_topic");
-	this->declare_parameter("time_synchronization");
+	this->declare_parameter("output_packets_topic", rclcpp::PARAMETER_STRING);
+	this->declare_parameter("output_difop_topic", rclcpp::PARAMETER_STRING);
+	this->declare_parameter("time_synchronization", rclcpp::PARAMETER_BOOL);
 	this->get_parameter("output_packets_topic", output_packets_topic);
 	this->get_parameter("output_difop_topic", output_difop_topic);
 	this->get_parameter("time_synchronization", time_synchronization_);

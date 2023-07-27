@@ -47,9 +47,9 @@ Input::Input(rclcpp::Node* private_nh, uint16_t port) : private_nh_(private_nh),
   
   if(Input_first_time == 0)
   {
-	  private_nh->declare_parameter("device_ip");
-	  private_nh->declare_parameter("add_multicast");
-	  private_nh->declare_parameter("group_ip");
+	  private_nh->declare_parameter("device_ip", rclcpp::PARAMETER_STRING);
+	  private_nh->declare_parameter("add_multicast", rclcpp::PARAMETER_BOOL);
+	  private_nh->declare_parameter("group_ip", rclcpp::PARAMETER_STRING);
 	  Input_first_time++;
   }
   private_nh->get_parameter("device_ip", devip_str_);

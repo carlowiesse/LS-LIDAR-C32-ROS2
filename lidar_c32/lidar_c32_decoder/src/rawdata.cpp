@@ -45,16 +45,16 @@ void RawData::loadConfigFile()
   print_vert_ = true;
   model = std::string("C32");
   return_mode_ = 1;
-  private_nh_->declare_parameter("start_angle");
-  private_nh_->declare_parameter("end_angle");
-  private_nh_->declare_parameter("max_distance");
-  private_nh_->declare_parameter("min_distance");
-  private_nh_->declare_parameter("degree_mode");
-  private_nh_->declare_parameter("distance_unit");
-  private_nh_->declare_parameter("config_vert");
-  private_nh_->declare_parameter("print_vert");
-  private_nh_->declare_parameter("model");
-  private_nh_->declare_parameter("return_mode");
+  private_nh_->declare_parameter("start_angle", rclcpp::PARAMETER_DOUBLE);
+  private_nh_->declare_parameter("end_angle", rclcpp::PARAMETER_DOUBLE);
+  private_nh_->declare_parameter("max_distance", rclcpp::PARAMETER_DOUBLE);
+  private_nh_->declare_parameter("min_distance", rclcpp::PARAMETER_DOUBLE);
+  private_nh_->declare_parameter("degree_mode", rclcpp::PARAMETER_INTEGER);
+  private_nh_->declare_parameter("distance_unit", rclcpp::PARAMETER_DOUBLE);
+  private_nh_->declare_parameter("config_vert", rclcpp::PARAMETER_BOOL);
+  private_nh_->declare_parameter("print_vert", rclcpp::PARAMETER_BOOL);
+  private_nh_->declare_parameter("model", rclcpp::PARAMETER_STRING);
+  private_nh_->declare_parameter("return_mode", rclcpp::PARAMETER_INTEGER);
   
   private_nh_->get_parameter("start_angle", start_angle_);
   private_nh_->get_parameter("end_angle", end_angle_);

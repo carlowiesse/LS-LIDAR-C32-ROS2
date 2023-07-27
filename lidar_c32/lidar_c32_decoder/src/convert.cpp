@@ -34,11 +34,11 @@ Convert::Convert(const rclcpp::NodeOptions& options) : Node("cloud_node", option
   scan_num = 1;
   publish_scan = false;
   scan_frame_id = std::string("laser_link");
-  this->declare_parameter("output_points_topic");
-  this->declare_parameter("input_packets_topic");
-  this->declare_parameter("scan_num");
-  this->declare_parameter("publish_scan");
-  this->declare_parameter("scan_frame_id");
+  this->declare_parameter("output_points_topic", rclcpp::PARAMETER_STRING);
+  this->declare_parameter("input_packets_topic", rclcpp::PARAMETER_STRING);
+  this->declare_parameter("scan_num", rclcpp::PARAMETER_INTEGER);
+  this->declare_parameter("publish_scan", rclcpp::PARAMETER_BOOL);
+  this->declare_parameter("scan_frame_id", rclcpp::PARAMETER_STRING);
   
   this->get_parameter("output_points_topic", output_points_topic);
   this->get_parameter("input_packets_topic", input_packets_topic);
