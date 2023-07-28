@@ -47,14 +47,14 @@ Input::Input(rclcpp::Node* private_nh, uint16_t port) : private_nh_(private_nh),
   
   if(Input_first_time == 0)
   {
-	  private_nh->declare_parameter("device_ip", rclcpp::PARAMETER_STRING);
-	  private_nh->declare_parameter("add_multicast", rclcpp::PARAMETER_BOOL);
-	  private_nh->declare_parameter("group_ip", rclcpp::PARAMETER_STRING);
+	  private_nh->declare_parameter("device_ip", "192.168.1.200");
+	  private_nh->declare_parameter("add_multicast", false);
+	  private_nh->declare_parameter("group_ip", "224.1.1.2");
 	  Input_first_time++;
   }
-  private_nh->get_parameter("device_ip", devip_str_);
-  private_nh->get_parameter("add_multicast", add_multicast);
-  private_nh->get_parameter("group_ip", group_ip);
+  devip_str_ = private_nh->get_parameter("device_ip").as_string();
+  add_multicast = private_nh->get_parameter("add_multicast").as_bool();
+  group_ip = private_nh->get_parameter("group_ip").as_string();
 
   if (!devip_str_.empty())
 	  RCLCPP_INFO(private_nh->get_logger(), "[driver][input] accepting packets from IP address: %s", devip_str_.c_str());

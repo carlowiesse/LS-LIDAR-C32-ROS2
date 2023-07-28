@@ -29,22 +29,23 @@ Convert::Convert(const rclcpp::NodeOptions& options) : Node("cloud_node", option
 
   data_->loadConfigFile();  // load lidar parameters
   
-  std::string output_points_topic = std::string("lidar_point_cloud");
-  std::string input_packets_topic = std::string("lidar_packet");
-  scan_num = 1;
-  publish_scan = false;
-  scan_frame_id = std::string("laser_link");
-  this->declare_parameter("output_points_topic", rclcpp::PARAMETER_STRING);
-  this->declare_parameter("input_packets_topic", rclcpp::PARAMETER_STRING);
-  this->declare_parameter("scan_num", rclcpp::PARAMETER_INTEGER);
-  this->declare_parameter("publish_scan", rclcpp::PARAMETER_BOOL);
-  this->declare_parameter("scan_frame_id", rclcpp::PARAMETER_STRING);
+  // std::string output_points_topic = std::string("lidar_point_cloud");
+  // std::string input_packets_topic = std::string("lidar_packet");
+  // scan_num = 1;
+  // publish_scan = false;
+  // scan_frame_id = std::string("laser_link");
   
-  this->get_parameter("output_points_topic", output_points_topic);
-  this->get_parameter("input_packets_topic", input_packets_topic);
-  this->get_parameter("scan_num", scan_num);
-  this->get_parameter("publish_scan", publish_scan);
-  this->get_parameter("scan_frame_id", scan_frame_id);
+  this->declare_parameter("output_points_topic", std::string("lidar_point_cloud"));
+  this->declare_parameter("input_packets_topic", std::string("lidar_packet"));
+  this->declare_parameter("scan_num", 1);
+  this->declare_parameter("publish_scan", false);
+  this->declare_parameter("scan_frame_id", std::string("laser_link"));
+  
+  std::string output_points_topic = this->get_parameter("output_points_topic").as_string();
+  std::string input_packets_topic = this->get_parameter("input_packets_topic").as_string();
+  scan_num = this->get_parameter("scan_num").as_int();
+  publish_scan = this->get_parameter("publish_scan").as_bool();
+  scan_frame_id = this->get_parameter("scan_frame_id").as_string();
 	
   output_ = this->create_publisher<sensor_msgs::msg::PointCloud2>(output_points_topic, 10);
   scan_pub = this->create_publisher<sensor_msgs::msg::LaserScan>("scan", 100);

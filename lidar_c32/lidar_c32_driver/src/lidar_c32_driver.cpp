@@ -26,22 +26,24 @@ lidarDriver::lidarDriver(const rclcpp::NodeOptions& options) :
     //std::string tf_prefix = tf::getPrefixParam(private_nh);
     //ROS_DEBUG_STREAM("tf_prefix: " << tf_prefix);
     //config_.frame_id = tf::resolve(tf_prefix, config_.frame_id);
-	config_.frame_id = std::string("lidar");
-	config_.model = std::string("C32");
-	config_.degree_mode = 1;
-	config_.return_mode = 1;
-	config_.rpm = 300.0;
 
-	this->declare_parameter("frame_id", rclcpp::PARAMETER_STRING);
-	this->declare_parameter("model", rclcpp::PARAMETER_STRING);
-	this->declare_parameter("degree_mode", rclcpp::PARAMETER_INTEGER);
-	this->declare_parameter("return_mode", rclcpp::PARAMETER_INTEGER);
-	this->declare_parameter("rpm", rclcpp::PARAMETER_DOUBLE);
-	this->get_parameter("frame_id", config_.frame_id);
-	this->get_parameter("model", config_.model);
-	this->get_parameter("degree_mode", config_.degree_mode);
-	this->get_parameter("return_mode", config_.return_mode);
-	this->get_parameter("rpm", config_.rpm);
+	// config_.frame_id = std::string("lidar");
+	// config_.model = std::string("C32");
+	// config_.degree_mode = 1;
+	// config_.return_mode = 1;
+	// config_.rpm = 300.0;
+
+	this->declare_parameter("frame_id", std::string("lidar"));
+	this->declare_parameter("model", std::string("C32"));
+	this->declare_parameter("degree_mode", 1);
+	this->declare_parameter("return_mode", 1);
+	this->declare_parameter("rpm", 300.0);
+
+	config_.frame_id = this->get_parameter("frame_id").as_string();
+	config_.model = this->get_parameter("model").as_string();
+	config_.degree_mode = this->get_parameter("degree_mode").as_int();
+	config_.return_mode = this->get_parameter("return_mode").as_int();
+	config_.rpm = this->get_parameter("rpm").as_double();
 
     double packet_rate;  // packet frequency (Hz)
 	double frequency = (config_.rpm / 60.0);  // expected Hz rate
@@ -52,20 +54,25 @@ lidarDriver::lidarDriver(const rclcpp::NodeOptions& options) :
       packet_rate = POINTS_ONE_CHANNEL_PER_SECOND64 * config_.return_mode;
     }
 
-    config_.npackets = (int)ceil(packet_rate / frequency);
-	this->declare_parameter("npackets", rclcpp::PARAMETER_INTEGER);
-	this->get_parameter("npackets", config_.npackets);
+    // config_.npackets = (int)ceil(packet_rate / frequency);
+
+	this->declare_parameter("npackets", (int)ceil(packet_rate / frequency));
+
+	config_.npackets = this->get_parameter("npackets").as_int();
+	
 	RCLCPP_INFO(this->get_logger(), "[driver] publishing %d packets per scan", config_.npackets);
     printf("frequency = %f\n", frequency);
     //std::string dump_file;
     //this->get_parameter_or("pcap", dump_file, std::string(""));
 
-    int msop_udp_port = (int)MSOP_DATA_PORT_NUMBER;
-	int difop_udp_port = (int)DIFOP_DATA_PORT_NUMBER;
-	this->declare_parameter("msop_port", rclcpp::PARAMETER_INTEGER);
-	this->declare_parameter("difop_port", rclcpp::PARAMETER_INTEGER);
-	this->get_parameter("msop_port", msop_udp_port);
-	this->get_parameter("difop_port", difop_udp_port);
+    // int msop_udp_port = (int)MSOP_DATA_PORT_NUMBER;
+	// int difop_udp_port = (int)DIFOP_DATA_PORT_NUMBER;
+
+	this->declare_parameter("msop_port", (int)MSOP_DATA_PORT_NUMBER);
+	this->declare_parameter("difop_port", (int)DIFOP_DATA_PORT_NUMBER);
+
+	int msop_udp_port = this->get_parameter("msop_port").as_int();
+	int difop_udp_port = this->get_parameter("difop_port").as_int();
   
 	scan_start = lidar_c32_msgs::msg::LidarC32ScanUnified();
 	scan_start.packets.resize(1);
@@ -85,15 +92,17 @@ lidarDriver::lidarDriver(const rclcpp::NodeOptions& options) :
    // }
 
     // raw packet output topic
-	std::string output_packets_topic = std::string("lidar_packet");
-	std::string output_difop_topic = std::string("lidar_packet_difop");
-	time_synchronization_ = false;
-	this->declare_parameter("output_packets_topic", rclcpp::PARAMETER_STRING);
-	this->declare_parameter("output_difop_topic", rclcpp::PARAMETER_STRING);
-	this->declare_parameter("time_synchronization", rclcpp::PARAMETER_BOOL);
-	this->get_parameter("output_packets_topic", output_packets_topic);
-	this->get_parameter("output_difop_topic", output_difop_topic);
-	this->get_parameter("time_synchronization", time_synchronization_);
+	// std::string output_packets_topic = std::string("lidar_packet");
+	// std::string output_difop_topic = std::string("lidar_packet_difop");
+	// time_synchronization_ = false;
+
+	this->declare_parameter("output_packets_topic", std::string("lidar_packet"));
+	this->declare_parameter("output_difop_topic", std::string("lidar_packet_difop"));
+	this->declare_parameter("time_synchronization", false);
+
+	std::string output_packets_topic = this->get_parameter("output_packets_topic").as_string();
+	std::string output_difop_topic = this->get_parameter("output_difop_topic").as_string();
+	time_synchronization_ = this->get_parameter("time_synchronization").as_bool();
 	
 	msop_output_ = this->create_publisher<lidar_c32_msgs::msg::LidarC32ScanUnified>(output_packets_topic, 10);
 	difop_output_ = this->create_publisher<lidar_c32_msgs::msg::LidarC32Packet>(output_difop_topic, 10);

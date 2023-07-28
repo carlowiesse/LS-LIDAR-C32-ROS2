@@ -35,37 +35,38 @@ void RawData::loadConfigFile()
   adjust_angle_three = 0;
   adjust_angle_four = 0;
 	
-  start_angle_ = 0.0f;	
-  end_angle_ = 360.0f;
-  max_distance_ = 200.0f;
-  min_distance_ = 0.2f;
-  degree_mode_ = 0;
-  distance_unit_ = 0.25f;
-  config_vert_ = true;
-  print_vert_ = true;
-  model = std::string("C32");
-  return_mode_ = 1;
-  private_nh_->declare_parameter("start_angle", rclcpp::PARAMETER_DOUBLE);
-  private_nh_->declare_parameter("end_angle", rclcpp::PARAMETER_DOUBLE);
-  private_nh_->declare_parameter("max_distance", rclcpp::PARAMETER_DOUBLE);
-  private_nh_->declare_parameter("min_distance", rclcpp::PARAMETER_DOUBLE);
-  private_nh_->declare_parameter("degree_mode", rclcpp::PARAMETER_INTEGER);
-  private_nh_->declare_parameter("distance_unit", rclcpp::PARAMETER_DOUBLE);
-  private_nh_->declare_parameter("config_vert", rclcpp::PARAMETER_BOOL);
-  private_nh_->declare_parameter("print_vert", rclcpp::PARAMETER_BOOL);
-  private_nh_->declare_parameter("model", rclcpp::PARAMETER_STRING);
-  private_nh_->declare_parameter("return_mode", rclcpp::PARAMETER_INTEGER);
+  // start_angle_ = 0.0f;	
+  // end_angle_ = 360.0f;
+  // max_distance_ = 200.0f;
+  // min_distance_ = 0.2f;
+  // degree_mode_ = 0;
+  // distance_unit_ = 0.25f;
+  // config_vert_ = true;
+  // print_vert_ = true;
+  // model = std::string("C32");
+  // return_mode_ = 1;
+
+  private_nh_->declare_parameter("start_angle", 0.0f);
+  private_nh_->declare_parameter("end_angle", 360.0f);
+  private_nh_->declare_parameter("max_distance", 200.0f);
+  private_nh_->declare_parameter("min_distance", 0.2f);
+  private_nh_->declare_parameter("degree_mode", 0);
+  private_nh_->declare_parameter("distance_unit", 0.25f);
+  private_nh_->declare_parameter("config_vert", true);
+  private_nh_->declare_parameter("print_vert", true);
+  private_nh_->declare_parameter("model", std::string("C32"));
+  private_nh_->declare_parameter("return_mode", 1);
   
-  private_nh_->get_parameter("start_angle", start_angle_);
-  private_nh_->get_parameter("end_angle", end_angle_);
-  private_nh_->get_parameter("max_distance", max_distance_);
-  private_nh_->get_parameter("min_distance", min_distance_);
-  private_nh_->get_parameter("degree_mode", degree_mode_);
-  private_nh_->get_parameter("distance_unit", distance_unit_);
-  private_nh_->get_parameter("config_vert", config_vert_);
-  private_nh_->get_parameter("print_vert", print_vert_);
-  private_nh_->get_parameter("model", model);
-  private_nh_->get_parameter("return_mode", return_mode_);
+  start_angle_ = private_nh_->get_parameter("start_angle").as_double();
+  end_angle_ = private_nh_->get_parameter("end_angle").as_double();
+  max_distance_ = private_nh_->get_parameter("max_distance").as_double();
+  min_distance_ = private_nh_->get_parameter("min_distance").as_double();
+  degree_mode_ = private_nh_->get_parameter("degree_mode").as_int();
+  distance_unit_ = private_nh_->get_parameter("distance_unit").as_double();
+  config_vert_ = private_nh_->get_parameter("config_vert").as_bool();
+  print_vert_ = private_nh_->get_parameter("print_vert").as_bool();
+  model = private_nh_->get_parameter("model").as_string();
+  return_mode_ = private_nh_->get_parameter("return_mode").as_int();
   
   if (start_angle_ < 0 || start_angle_ > 360 || end_angle_ < 0 || end_angle_ > 360)
   {
