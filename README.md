@@ -1,53 +1,82 @@
-## Describe:
-	**This version only verifies the mechanical 32 line radar with dual ports, single and double echoes, vertical angle of 1 degree and 0.33 degree**
-	**The driver is developed with ros2, and supports running under Ubuntu 18.04, and Ubuntu 20.04**
+# ROS2 packages for using Leishen 32-channel lidars
 
-## Set up the workspace
-```
-mkdir -p ~/lidar_ws/src
-cd ~/lidar_ws/src
-tar –xvf lidar_c32_V2.01.tar
-```
+![Foxy](https://img.shields.io/badge/foxy-E09623.svg?style=for-the-badge&logo=ros&logoColor=white)
+![Galactic](https://img.shields.io/badge/galactic-0F4C81.svg?style=for-the-badge&logo=ros&logoColor=white)
+![Humble](https://img.shields.io/badge/humble-66A3D9.svg?style=for-the-badge&logo=ros&logoColor=white)
 
-## Compile and package
-```
-cd ~/lidar_ws
-colcon build
-```	
+## Acknowledgements
 
-## Run
-```
-source install/setup.bash
-ros2 launch lidar_c32_decoder lidar_c32_launch.py
-```
+This is a continuation of the work done by [LS-Technical-Supporter](https://https://github.com/LS-Technical-Supporter).
 
+## Quickstart
 
+1. Set up workspace
 
-## lidar_c32.yaml Configuration file description: 
-~~~xml
-	device_ip: 192.168.1.206	//Set to the corresponding IP of radar
-	msop_port: 2366	//The port corresponding to the data packet
-	difop_port: 2367	//The port corresponding to the device package
-	rpm: 600	//Set to the speed corresponding to radar, 600 means 600 rpm in 1 minute
-	frame_id: laser_link	//Set the name of the fixed frame in rviz
-	add_multicast: false	//false means Turn off multicast
-	group_ip: 224.1.1.2	//Multicast IP settings
-	min_distance: 0.15	//Points less than 0.15 meters are not displayed
-	max_distance: 150.0	//Points greater than 150 meters are not displayed
-	scan_start_angle: 1000.0	//Only points from 10 to 300 degrees are displayed
-	scan_end_angle: 30000.0
-	distance_unit: 0.25		//The unit of distance is 0.25cm
-    degree_mode: 1	//1 means vertical angle 1 degree, 2 means vertical angle 0.33 degree
-	return_mode: 1	//1 means single echo, 2 means double echo
-	time_synchronization: false	//False means to use the local time of the computer, and true means to use the GPS time
-	publish_scan: true	//True means to turn on scan point cloud display
-	scan_num: 15	//15 means The scan point cloud corresponding to the 15th line is displayed
-	config_vert: true	//True meansTurn on vertical angle calibration
-~~~
+    ```bash
+    mkdir -p ~/workspaces/lslidar_ws/ && cd ~/workspaces/lslidar_ws/
+    ```
 
+2. Clone repository
 
+    ```bash
+    git clone https://github.com/carlowiesse/LS-LIDAR-C32-ROS2.git src/lslidar
+    ```
 
+3. Install dependencies
 
+    ```bash
+    sudo apt update && rosdep install --from-paths src -y --ignore-src
+    ```
 
+4. Build and source workspace
 
+    ```bash
+    colcon build && source install/setup.bash
+    ```
 
+5. Run launch file
+
+    ```bash
+    ros2 launch lidar_c32_decoder lidar_c32_launch.py
+    ```
+
+## ROS Parameters
+
+Available ROS launch files with their corresponding configuration files:
+
+| Launch file                | Configuration file                   | Description                                                |
+| -------------------------- | ------------------------------------ | ---------------------------------------------------------- |
+| lidar_c32_launch.py        | `lidar_c32.yaml`                     | Start data registration using ROS for one lidar device.    |
+| lidar_c32_double_launch.py | `lidar_c32.yaml`, `lidar_c32_1.yaml` | Start data registration using ROS for two lidar devices.   |
+
+Available parameters for each ROS node present in the above configuration files:
+
+### `cloud_node` parameters
+
+| ROS Parameter                | Type     | Default         | Description                                                                                   |
+| ---------------------------- | -------- | --------------- | --------------------------------------------------------------------------------------------- |
+| `min_distance`               | `float`  | `0.15`          | Minimum depth distance (in meters)                                                            |
+| `max_distance`               | `float`  | `150`           | Maximum depth distance (in meters)                                                            |
+| `degree_mode`                | `int`    | `1`             | Whether to set the vertical resolution to be 1° (`1`) or 0.33° (`2`).                         |
+| `distance_unit`              | `float`  | `0.25`          | Depth resolution (in centimeters)                                                             |
+| `return_mode`                | `int`    | `1`             | Whether to show every console output message once (`1`) or twice (`2`).                       |
+| `config_vert`                | `bool`   | `true`          | Whether to use vertical angle calibration.                                                    |
+| `print_vert`                 | `bool`   | `false`         | Whether to show console output from vertical angle calibration.                               |
+| `scan_frame_id`              | `string` | `laser_link`    | Name of the TF frame used to display the point cloud.                                         |
+| `scan_num`                   | `int`    | `15`            | Number of vertical scan lines.                                                                |
+| `publish_scan`               | `bool`   | `true`          | Whether to publish the point cloud.                                                           |
+
+### `lidar_node` parameters
+
+| ROS Parameter                | Type     | Default         | Description                                                                                   |
+| ---------------------------- | -------- | --------------- | --------------------------------------------------------------------------------------------- |
+| `device_ip`                  | `string` | `192.168.1.200` | IP address corresponding to the device (lidar).                                               |
+| `msop_port`                  | `int`    | `2368`          | UDP port corresponding to the data packet from the device.                                    |
+| `difop_port`                 | `int`    | `2369`          | UDP port corresponding to the device package.                                                 |
+| `frame_id`                   | `string` | `laser_link`    | Name of the fixed TF frame used as reference.                                                 |
+| `add_multicast`              | `bool`   | `false`         | Whether to enable multicast.                                                                  |
+| `group_ip`                   | `string` | `224.1.1.2`     | IP address used in multicast.                                                                 |
+| `rpm`                        | `float`  | `600.0`         | Rotation speed (in revolutions per minute)                                                    |
+| `return_mode`                | `int`    | `1`             | Whether to show every console output message once (`1`) or twice (`2`).                       |
+| `degree_mode`                | `int`    | `1`             | Whether to set the vertical resolution to be 1° (`1`) or 0.33° (`2`).                         |
+| `time_synchronization`       | `bool`   | `false`         | Whether to use local computer time (`false`) or GPS time from the device (`true`).            |
