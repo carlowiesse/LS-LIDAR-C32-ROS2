@@ -26,7 +26,7 @@ This is a continuation of the work done by [LS-Technical-Supporter](https://http
 3. Install dependencies
 
     ```bash
-    sudo apt update && rosdep install --from-paths src -y --ignore-src
+    sudo apt update && rosdep install --from-paths src --rosdistro ${ROS_DISTRO} -y --ignore-src
     ```
 
 4. Build and source workspace
